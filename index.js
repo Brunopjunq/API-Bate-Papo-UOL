@@ -172,9 +172,8 @@ setInterval( async () => {
 
     } catch (error) {
         console.log(error);
-        res.sendStatus(500);
     }
-})
+}, 15000);
 
 app.listen(5000, ()=>
 console.log('Listening on port 5000'));
