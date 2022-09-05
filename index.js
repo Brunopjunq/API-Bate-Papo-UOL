@@ -151,10 +151,28 @@ app.post('/status', async (req,res) => {
 
 setInterval( async () => {
     try {
-        
+        const timeNow = Date.now();
+        const users = await db.collection('participants').find().toArray();
+
+        for(let i = 0; i < users.length; i++) {
+            const user = users[i]
+            if(timeNow - user.lastStatus > 10000) {
+                const exitMessage = {
+                    from: user.name,
+                    to: 'Todos',
+                    text: 'sai da sala...',
+                    type: 'status',
+                    time: dayjs().format('HH:MM:SS')
+                };
+
+                await db.collection('participants').deleteOne({name: user.name});
+                await db.collection('messages').insertOne(exitMessage);
+            }
+        }
 
     } catch (error) {
-        
+        console.log(error);
+        res.sendStatus(500);
     }
 })
 
